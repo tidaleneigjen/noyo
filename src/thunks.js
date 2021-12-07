@@ -10,7 +10,7 @@ const fetchUserIds = () => (dispatch) => {
       })
     }
 
-    return response.json
+    return response.json()
   }, err => {
     throw err
   }).then(data => {
