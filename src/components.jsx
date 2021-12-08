@@ -64,7 +64,7 @@ Event = connect((state, ownProps) => {
 })(Event)
 
 
-const handleCompareClick = (dispatch) => (e) => {
+const handleCompareClick = (dispatch, comparisonJson) => (e) => {
   /*
    * Your code here (and probably elsewhere)
    *
@@ -75,8 +75,20 @@ const handleCompareClick = (dispatch) => (e) => {
    * and referenced in the comment below on line 78.
    */
 
-  // dispatch(fetchSelectedEventDetails())
+  dispatch({
+    type: actions.COMPARE_SELECTED_EVENTS,
+    payload: comparisonJson
+  })
+
+  dispatch(fetchSelectedEventDetails())
 }
+
+let Modal = ({comparisonJson}) => {
+  return <>
+    <pre>{JSON.stringify(comparisonJson, undefined, 2)}</pre>
+  </>
+}
+Modal = connect(state => state)(Modal)
 
 let EventList = ({dispatch, canCompare, events}) => {
   return <>
@@ -118,7 +130,7 @@ Address = connect((state, ownProps) => {
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error} ) => {
+let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, comparisonJson, error} ) => {
   return <>
     {error ? <p className="error">{error}</p> : ''}
     {userIds && userIds.length ?
@@ -140,6 +152,16 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
       { events && events.length
         ? <EventList events={events} />
         : <p>{selectedAddressId ? 'No events found.' : 'Select an address to see events'}</p>
+      }
+    </div>
+    <div className="comparison">
+      <h2>Comparison</h2>
+      { comparingEvents 
+      ? <>
+        <p>Now we will compare</p>
+        <Modal comparisonJson={comparisonJson} />
+        </>
+      : <p>To compare events, choose two and click the compare button.</p>
       }
     </div>
   </>

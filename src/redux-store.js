@@ -15,7 +15,8 @@ const actions = {
   FETCH_EVENTS_ERROR: 'fetch_events_error',
   TOGGLE_EVENT_SELECTION: 'toggle_event_selection',
   EVENT_DETAILS_SUCCESS: 'event_details_success',
-  EVENT_DETAILS_ERROR: 'event_details_error'
+  EVENT_DETAILS_ERROR: 'event_details_error',
+  COMPARE_SELECTED_EVENTS: 'compare_selected_events'
 }
 
 
