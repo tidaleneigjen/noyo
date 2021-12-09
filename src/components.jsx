@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { fetchAddresses, fetchEvents, fetchSelectedEventDetails } from './thunks'
-import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
+import { eventGuid, canSelectEvents, undeletedAddresses} from './selectors'
 import { actions } from './redux-store'
 
 
@@ -83,12 +83,8 @@ const handleCompareClick = (dispatch, comparisonJson) => (e) => {
   dispatch(fetchSelectedEventDetails())
 }
 
-let Modal = ({comparisonJson}) => {
-  return <>
-    <pre>{JSON.stringify(comparisonJson, undefined, 2)}</pre>
-  </>
-}
-Modal = connect(state => state)(Modal)
+
+
 
 let EventList = ({dispatch, canCompare, events}) => {
   return <>
@@ -128,6 +124,48 @@ Address = connect((state, ownProps) => {
 })(Address)
 
 
+let Modal = (foo) => {
+
+  if(foo.comparisonJson){
+    const [A,B] = [...foo.comparisonJson]
+    // TODO: Remove these console.logs
+    // console.log("A: " + A.id)
+    // console.log("B: " + B.id)
+
+    // TODO: Sort out unique keys for each list item
+    return <div className="modal">
+    <ul className="event_A">
+      {Object.keys(A).map( (key) => {
+      return(
+      <div>  
+        {A[key]===B[key]
+        ? <li key={key + "_A"}>{key}: {A[key]}</li>
+        : <li key={key + "_A"} className="diff">{key}: {A[key]}</li>
+        }
+      </div>)
+      })}
+    </ul>
+    <ul className="event_B">      
+      {Object.keys(B).map( (key) => {
+      return(
+      <div>
+        {A[key]===B[key]
+        ? <li key={key + "_B"}>{key}: {B[key]}</li>
+        : <li key={key + "_B"} className="diff">{key}: {B[key]}</li>
+      }
+      </div>)
+      })}
+    </ul>
+    </div>
+  }
+
+  return <>
+    <p>We're in the Modal.</p>
+  </>
+}
+Modal = connect( (state) => {return {comparisonJson: state.comparisonJson} } )(Modal)
+
+
 
 //--> App wrapper
 let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, comparisonJson, error} ) => {
@@ -155,11 +193,11 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
       }
     </div>
     <div className="comparison">
-      <h2>Comparison</h2>
       { comparingEvents 
-      ? <>
-        <p>Now we will compare</p>
-        <Modal comparisonJson={comparisonJson} />
+      ?  <>
+          <h2>Comparison</h2>
+          <button >Close me.</button>
+          <Modal  comparisonJson={comparisonJson}/>
         </>
       : <p>To compare events, choose two and click the compare button.</p>
       }

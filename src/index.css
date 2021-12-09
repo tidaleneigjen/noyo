@@ -41,3 +41,17 @@ form, .addresses {
 .addresses .selected > pre {
   outline: 1px dashed #333;
 }
+/* additional styles here */
+li.diff {
+  background-color: yellow;
+}
+.comparison {
+  clear: both;
+}
+.event_A {
+  float: left;
+}
+.event_B {
+  float: right;
+}
+
