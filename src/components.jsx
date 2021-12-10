@@ -39,7 +39,6 @@ let UserSelectForm = ({ dispatch, userIds, selectedUserId }) => {
 UserSelectForm = connect(state => state)(UserSelectForm)
 
 
-
 //--> Events list
 const handleEventToggle = (dispatch, guid) => (e) => {
   dispatch({
@@ -84,8 +83,6 @@ const handleCompareClick = (dispatch, comparisonJson) => (e) => {
 }
 
 
-
-
 let EventList = ({dispatch, canCompare, events}) => {
   return <>
     <button onClick={handleCompareClick(dispatch)} disabled={!canCompare}>Compare</button>
@@ -113,7 +110,6 @@ const handleAddressClick = (dispatch, id) => (e) => {
   dispatch(fetchEvents(id))
 }
 
-
 let Address = ({ dispatch, addressJson, isSelected }) => {
   return <li onClick={handleAddressClick(dispatch, addressJson.id)} className={isSelected ? 'selected' : ''}>
     <pre>{JSON.stringify(addressJson, undefined, 2)}</pre>
@@ -124,15 +120,18 @@ Address = connect((state, ownProps) => {
 })(Address)
 
 
-let Modal = (foo) => {
+let Modal = (props) => {
 
-  if(foo.comparisonJson){
-    const [A,B] = [...foo.comparisonJson]
+  if(props.comparisonJson){
+    const [A,B] = [...props.comparisonJson]
     // TODO: Remove these console.logs
     // console.log("A: " + A.id)
     // console.log("B: " + B.id)
 
-    // TODO: Sort out unique keys for each list item
+    // TODO: This is a car wreck. Next step would be to extract these event 
+    // details out into their own compoents and feed them the correct props.
+    // Also, need to handle unique keys for each list element. What I have 
+    // currently is not working.
     return <div className="modal">
     <ul className="event_A">
       {Object.keys(A).map( (key) => {
@@ -166,7 +165,6 @@ let Modal = (foo) => {
 Modal = connect( (state) => {return {comparisonJson: state.comparisonJson} } )(Modal)
 
 
-
 //--> App wrapper
 let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, comparisonJson, error} ) => {
   return <>
@@ -192,11 +190,13 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
         : <p>{selectedAddressId ? 'No events found.' : 'Select an address to see events'}</p>
       }
     </div>
+
     <div className="comparison">
       { comparingEvents 
       ?  <>
           <h2>Comparison</h2>
-          <button >Close me.</button>
+          {/* TODO: Enable the ability to close the modal. */}
+          <button >Close me. (not enabled yet)</button>
           <Modal  comparisonJson={comparisonJson}/>
         </>
       : <p>To compare events, choose two and click the compare button.</p>
