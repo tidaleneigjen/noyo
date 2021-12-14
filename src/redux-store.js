@@ -16,7 +16,8 @@ const actions = {
   TOGGLE_EVENT_SELECTION: 'toggle_event_selection',
   EVENT_DETAILS_SUCCESS: 'event_details_success',
   EVENT_DETAILS_ERROR: 'event_details_error',
-  COMPARE_SELECTED_EVENTS: 'compare_selected_events'
+  COMPARE_SELECTED_EVENTS: 'compare_selected_events',
+  CLOSE_MODAL: 'close_modal'
 }
 
 
@@ -106,6 +107,11 @@ const reducer = (state, action) => {
         ...state,
         error : action.payload
       }
+    case actions.CLOSE_MODAL:
+        return {
+          ...state,
+          comparingEvents: false
+        }
     default:
       return state
   }

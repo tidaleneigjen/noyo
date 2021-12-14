@@ -119,6 +119,14 @@ Address = connect((state, ownProps) => {
   return { isSelected : state.selectedAddressId === ownProps.addressJson.id }
 })(Address)
 
+//--> Addresses list
+const closeModal= (dispatch) => (e) => {
+  e.preventDefault()
+
+  dispatch({
+    type: actions.CLOSE_MODAL,
+  })
+}
 
 let Modal = (props) => {
 
@@ -166,7 +174,7 @@ Modal = connect( (state) => {return {comparisonJson: state.comparisonJson} } )(M
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, comparisonJson, error} ) => {
+let App = ({ addresses, dispatch, events, userIds, selectedUserId, selectedAddressId, comparingEvents, comparisonJson, error} ) => {
   return <>
     {error ? <p className="error">{error}</p> : ''}
     {userIds && userIds.length ?
@@ -196,7 +204,7 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
       ?  <>
           <h2>Comparison</h2>
           {/* TODO: Enable the ability to close the modal. */}
-          <button >Close me. (not enabled yet)</button>
+          <button onClick={closeModal(dispatch)}>Close me. (not enabled yet)</button>
           <Modal  comparisonJson={comparisonJson}/>
         </>
       : <p>To compare events, choose two and click the compare button.</p>
